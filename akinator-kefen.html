@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MINIONAITOR</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+
+            background:
+                radial-gradient(circle at 10% 10%, #fff59d, transparent 30%),
+                radial-gradient(circle at 90% 90%, #fdd835, transparent 35%),
+                linear-gradient(135deg, #ffeb3b, #fbc02d);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            color: #222;
+            padding: 20px;
+        }
+
+        .contenedor {
+            width: 100%;
+            max-width: 850px;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            border-radius: 30px;
+            padding: 50px 45px;
+
+            text-align: center;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.20);
+
+            border: 5px solid #fbc02d;
+        }
+
+        /* =========================
+           MINION
+        ========================== */
+
+        .minino {
+            width: 115px;
+            height: 115px;
+
+            object-fit: contain;
+
+            animation: saltar 1.5s infinite ease-in-out;
+        }
+
+        @keyframes saltar {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-18px);
+            }
+
+        }
+
+        h1 {
+            font-size: 42px;
+            margin: 10px 0 20px;
+
+            line-height: 1.1;
+            font-weight: 900;
+        }
+
+        .inicio-texto {
+            font-size: 19px;
+
+            line-height: 1.6;
+
+            color: #555;
+
+            margin-bottom: 35px;
+        }
+
+        button {
+            display: block;
+
+            width: 280px;
+
+            margin: 14px auto;
+
+            padding: 17px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: #333;
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+        }
+
+        button:hover {
+            background: #555;
+
+            transform: scale(1.03);
+        }
+
+        .boton-nosabe {
+            background: #777;
+        }
+
+        /* =========================
+           BARRA
+        ========================== */
+
+        .barra {
+            width: 100%;
+
+            height: 8px;
+
+            background: #e5e7eb;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            margin-bottom: 30px;
+        }
+
+        .progreso {
+            width: 0%;
+
+            height: 100%;
+
+            background: #fbc02d;
+
+            border-radius: 20px;
+
+            transition: width 0.5s ease;
+        }
+
+        /* =========================
+           PREGUNTAS
+        ========================== */
+
+        .pregunta-label {
+            text-transform: uppercase;
+
+            font-size: 13px;
+
+            letter-spacing: 3px;
+
+            color: #888;
+
+            margin-bottom: 20px;
+        }
+
+        .pregunta {
+            font-size: 31px;
+
+            font-weight: bold;
+
+            line-height: 1.3;
+
+            min-height: 105px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-bottom: 25px;
+        }
+
+        .mensaje {
+            margin-top: 25px;
+
+            font-size: 17px;
+
+            color: #777;
+
+            min-height: 25px;
+
+            font-style: italic;
+        }
+
+        .aparecer {
+            animation: aparecer 0.35s ease;
+        }
+
+        @keyframes aparecer {
+
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        /* =========================
+           RESULTADO
+        ========================== */
+
+        .resultado-pequeno {
+            text-transform: uppercase;
+
+            letter-spacing: 4px;
+
+            font-size: 14px;
+
+            color: #888;
+
+            margin-bottom: 10px;
+        }
+
+        .resultado-nombre {
+            font-size: 48px;
+
+            font-weight: bold;
+
+            margin: 15px 0;
+        }
+
+        .foto-resultado {
+            width: 230px;
+            height: 230px;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            display: block;
+
+            margin: 20px auto;
+
+            border: 8px solid #fbc02d;
+
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.22);
+        }
+
+        .resultado-texto {
+            font-size: 20px;
+
+            color: #555;
+
+            line-height: 1.5;
+
+            margin-bottom: 30px;
+        }
+
+        .oculto {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .contenedor {
+                padding: 40px 22px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .pregunta {
+                font-size: 25px;
+            }
+
+            .resultado-nombre {
+                font-size: 38px;
+            }
+
+            .foto-resultado {
+                width: 190px;
+                height: 190px;
+            }
+
+            button {
+                width: 90%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="contenedor">
+
+
+    <!-- =========================
+         INICIO
+    ========================== -->
+
+    <div id="inicio">
+
+        <img
+            src="fotos/minino.jpg"
+            class="minino"
+            alt="Minion"
+        >
+
+        <h1>
+            MINIONAITOR
+        </h1>
+
+        <p class="inicio-texto">
+
+            Pensá en un Minion.<br><br>
+
+            No me digas quién es.
+
+            Voy a hacerte algunas preguntas
+            e intentar descubrirlo...
+
+        </p>
+
+        <button onclick="empezar()">
+            EMPEZAR
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         JUEGO
+    ========================== -->
+
+    <div id="juego" class="oculto">
+
+        <img
+            src="fotos/minino.jpg"
+            class="minino"
+            alt="Minion"
+        >
+
+        <div class="barra">
+
+            <div
+                id="progreso"
+                class="progreso">
+            </div>
+
+        </div>
+
+
+        <div class="pregunta-label">
+            PREGUNTA
+        </div>
+
+
+        <div
+            id="pregunta"
+            class="pregunta">
+        </div>
+
+
+        <button onclick="responder(true)">
+            SÍ
+        </button>
+
+
+        <button onclick="responder(false)">
+            NO
+        </button>
+
+
+        <button
+            class="boton-nosabe"
+            onclick="responder(null)">
+
+            NO SÉ
+
+        </button>
+
+
+        <div
+            id="mensaje"
+            class="mensaje">
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         RESULTADO
+    ========================== -->
+
+    <div id="resultado" class="oculto">
+
+        <img
+            src="fotos/minino.jpg"
+            class="minino"
+            alt="Minion"
+        >
+
+        <div class="resultado-pequeno">
+            EL MINIONAITOR HA DECIDIDO
+        </div>
+
+        <h1>
+            CREO QUE YA SÉ...
+        </h1>
+
+
+        <img
+            id="fotoResultado"
+            class="foto-resultado"
+            src=""
+            alt=""
+        >
+
+
+        <div
+            id="nombreResultado"
+            class="resultado-nombre">
+        </div>
+
+
+        <p
+            id="textoResultado"
+            class="resultado-texto">
+        </p>
+
+
+        <button onclick="reiniciar()">
+            JUGAR DE NUEVO
+        </button>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+/* ============================================================
+   PERSONAS
+============================================================ */
+
+const personas = [
+
+    "Shimi",
+    "Nico Garten",
+    "Jaz Alster",
+    "Ghalia",
+    "Cami Romano",
+    "Mura",
+    "Iair",
+    "Magui",
+    "Noah",
+    "Pepo",
+    "Nacho",
+    "Benve",
+    "Cami Abal",
+    "Tali Sambra",
+    "Martu Glot",
+    "Emma",
+    "Gonza",
+    "Sofi",
+    "Cami Wein",
+    "Martu Boro",
+    "Vera",
+    "Kiki",
+    "Luli",
+    "Felpi",
+    "Dani Bialo",
+    "Jaz Dabbah"
+
+];
+
+
+/* ============================================================
+   GÉNERO
+============================================================ */
+
+const varones = [
+
+    "Shimi",
+    "Nico Garten",
+    "Mura",
+    "Iair",
+    "Noah",
+    "Benve",
+    "Pepo",
+    "Nacho",
+    "Gonza",
+    "Felpi"
+
+];
+
+
+const mujeres = [
+
+    "Jaz Alster",
+    "Ghalia",
+    "Cami Romano",
+    "Magui",
+    "Cami Abal",
+    "Tali Sambra",
+    "Martu Glot",
+    "Emma",
+    "Sofi",
+    "Cami Wein",
+    "Martu Boro",
+    "Vera",
+    "Kiki",
+    "Luli",
+    "Dani Bialo",
+    "Jaz Dabbah"
+
+];
+
+
+/* ============================================================
+   PREGUNTAS GENERALES
+============================================================ */
+
+const preguntasGenerales = [
+
+    {
+        texto: "¿Es hombre?",
+        si: varones,
+        tipo: "genero"
+    },
+
+    {
+        texto: "¿Es mujer?",
+        si: mujeres,
+        tipo: "genero"
+    },
+
+    {
+        texto: "¿Fue a Majanon 2026?",
+        si: [
+
+            "Shimi",
+            "Nico Garten",
+            "Jaz Alster",
+            "Ghalia",
+            "Cami Romano",
+            "Mura",
+            "Iair",
+            "Magui",
+            "Noah",
+            "Pepo",
+            "Nacho",
+            "Benve",
+            "Cami Abal",
+            "Tali Sambra",
+            "Martu Glot",
+            "Emma",
+            "Gonza",
+            "Sofi",
+            "Cami Wein",
+            "Martu Boro"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Su nombre está repetido en Kefen?",
+        si: [
+
+            "Pepo",
+            "Felpi",
+            "Nico Garten",
+            "Benve",
+            "Jaz Alster",
+            "Jaz Dabbah",
+            "Cami Romano",
+            "Cami Abal",
+            "Cami Wein",
+            "Martu Glot",
+            "Martu Boro"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Tiene algún hermano/a en el Tzevet de Madrijim?",
+        si: [
+
+            "Noah",
+            "Nico Garten",
+            "Iair"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Estaba en feminismo moderno?",
+        si: [
+
+            "Mura",
+            "Benve",
+            "Nico Garten",
+            "Nacho",
+            "Cami Romano",
+            "Jaz Alster",
+            "Emma"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Va a Tarbut?",
+        si: [
+
+            "Cami Abal",
+            "Magui",
+            "Cami Romano"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Es morocho/a?",
+        si: [
+
+            "Shimi",
+            "Nico Garten",
+            "Mura",
+            "Iair",
+            "Noah",
+            "Pepo",
+            "Nacho",
+            "Jaz Alster",
+            "Cami Romano",
+            "Magui",
+            "Tali Sambra",
+            "Martu Glot",
+            "Emma",
+            "Martu Boro",
+            "Vera",
+            "Kiki",
+            "Luli",
+            "Dani Bialo",
+            "Sofi",
+            "Cami Wein",
+            "Jaz Dabbah"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Es rubio/a?",
+        si: [
+
+            "Benve",
+            "Felpi",
+            "Ghalia",
+            "Cami Abal",
+            "Cami Romano",
+            "Sofi",
+            "Cami Wein",
+            "Jaz Dabbah"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Entró este año a Kefen?",
+        si: [
+
+            "Tali Sambra",
+            "Martu Boro",
+            "Dani Bialo",
+            "Jaz Dabbah"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Cumple en mayo?",
+        si: [
+
+            "Ghalia",
+            "Cami Wein",
+            "Noah",
+            "Shimi",
+            "Nico Garten"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Vino a la Harkada en Iom Haatzmaut?",
+        si: [
+
+            "Cami Abal",
+            "Cami Wein",
+            "Magui",
+            "Iair",
+            "Pepo",
+            "Nico Garten",
+            "Gonza",
+            "Benve",
+            "Jaz Alster"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Fue a Majane 2024 (Alef Guimel)?",
+        si: [
+
+            "Nico Garten",
+            "Jaz Alster",
+            "Luli",
+            "Magui",
+            "Shimi",
+            "Ghalia",
+            "Iair",
+            "Cami Wein",
+            "Kiki",
+            "Gonza"
+
+        ],
+
+        tipo: "general"
+    },
+
+    {
+        texto: "¿Hizo la Sofit en 2023?",
+        si: [
+
+            "Nico Garten",
+            "Gonza",
+            "Iair",
+            "Shimi",
+            "Jaz Alster",
+            "Cami Wein",
+            "Kiki",
+            "Ghalia",
+            "Magui",
+            "Luli"
+
+        ],
+
+        tipo: "general"
+    }
+
+];
+
+
+/* ============================================================
+   PREGUNTAS INDIVIDUALES
+============================================================ */
+
+const preguntasIndividuales = [
+
+    /* ---------- MUJERES ---------- */
+
+    {
+        texto: "¿Se podría decir que es casi italiana?",
+        si: ["Vera"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Tiene una hermana en Yaden?",
+        si: ["Martu Glot"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Tiene una prima en Teruf y otra en 8 años?",
+        si: ["Tali Sambra"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Va a Buber?",
+        si: ["Cami Wein"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Tiene un hermano en Teruf?",
+        si: ["Cami Romano"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Uno de sus hermanos se llama Dante?",
+        si: ["Jaz Alster"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Su hermano iba a Meshu?",
+        si: ["Kiki"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Tiene un hermano de la misma edad?",
+        si: ["Luli"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Vino por primera vez a Kefen la semana pasada?",
+        si: ["Jaz Dabbah"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿En Feminismo Moderno fue reconocida por correr con Mura?",
+        si: ["Emma"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Su nuevo apodo es Chofa?",
+        si: ["Sofi"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Tiene un hermano de la edad de Teruf pero no viene a Bet El?",
+        si: ["Magui"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Fuimos al SUM de su casa más de una vez en el año?",
+        si: ["Ghalia"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Es la persona más puntual de Kefen?",
+        si: ["Cami Abal"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Fue la última persona en anotarse a Majanon?",
+        si: ["Martu Boro"],
+        genero: "mujer"
+    },
+
+    {
+        texto: "¿Vino por primera vez antes de Majanon?",
+        si: ["Dani Bialo"],
+        genero: "mujer"
+    },
+
+
+    /* ---------- VARONES ---------- */
+
+    {
+        texto: "¿Juega al rugby?",
+        si: ["Iair"],
+        genero: "varon"
+    },
+
+    {
+        texto: "¿Está rindiendo muchos exámenes?",
+        si: ["Felpi"],
+        genero: "varon"
+    },
+
+    {
+        texto: "¿Tiene el pelo colorado?",
+        si: ["Gonza"],
+        genero: "varon"
+    },
+
+    {
+        texto: "¿Tiene 2 hermanos varones más grandes?",
+        si: ["Pepo"],
+        genero: "varon"
+    },
+
+    {
+        texto: "¿Es la persona más chica de Kefen (edad)?",
+        si: ["Noah"],
+        genero: "varon"
+    },
+
+    {
+        texto: "¿En los Premios Kefen ganó el premio 'Yo no fui'?",
+        si: ["Benve"],
+        genero: "varon"
+    },
+
+    {
+        texto: "¿Su mamá se llama Rosi?",
+        si: ["Nico Garten"],
+        genero: "varon"
+    },
+
+    {
+        texto: "¿Cumple el 5 de mayo?",
+        si: ["Shimi"],
+        genero: "varon"
+    },
+
+    {
+        texto: "¿Es la persona que más tarde llega todos los sábados?",
+        si: ["Mura"],
+        genero: "varon"
+    },
+
+    {
+        texto: "¿La mamá se llama Natalia?",
+        si: ["Nacho", "Ghalia"],
+        genero: "general"
+    }
+
+];
+
+
+/* ============================================================
+   FOTOS
+============================================================ */
+
+const fotos = {
+
+    "Vera": "fotos/vera.jpeg",
+    "Martu Glot": "fotos/glot.jpeg",
+    "Tali Sambra": "fotos/tali.jpeg",
+    "Iair": "fotos/iair.jpeg",
+    "Felpi": "fotos/felpi.jpeg",
+    "Cami Wein": "fotos/wein.jpeg",
+    "Gonza": "fotos/gonza.jpeg",
+    "Pepo": "fotos/pepo.jpeg",
+    "Noah": "fotos/noah.jpeg",
+    "Cami Romano": "fotos/romano.jpeg",
+    "Jaz Alster": "fotos/jazal.jpeg",
+    "Benve": "fotos/benve.jpeg",
+    "Kiki": "fotos/kiki.jpeg",
+    "Luli": "fotos/luli.jpeg",
+    "Jaz Dabbah": "fotos/jazd.jpeg",
+    "Emma": "fotos/emma.jpeg",
+    "Sofi": "fotos/sofi.jpeg",
+    "Nico Garten": "fotos/garten.jpeg",
+    "Magui": "fotos/magui.jpeg",
+    "Shimi": "fotos/shimi.jpeg",
+    "Ghalia": "fotos/ghalia.jpeg",
+    "Mura": "fotos/mura.jpeg",
+    "Nacho": "fotos/nacho.jpeg",
+    "Cami Abal": "fotos/abal.jpeg",
+    "Martu Boro": "fotos/boro.jpeg",
+    "Dani Bialo": "fotos/dani.jpeg"
+};
+
+
+/* ============================================================
+   CONFIGURACIÓN
+============================================================ */
+
+const MINIMO_PREGUNTAS = 10;
+const MAXIMO_PREGUNTAS = 18;
+
+
+/* ============================================================
+   VARIABLES
+============================================================ */
+
+let candidatos = [];
+
+let preguntasDisponibles = [];
+
+let preguntaActual = null;
+
+let numeroPregunta = 0;
+
+let historial = [];
+
+let generoConfirmado = null;
+
+
+/* ============================================================
+   MENSAJES
+============================================================ */
+
+const mensajes = [
+
+    "Mmm... interesante...",
+
+    "Creo que esto empieza a tener sentido...",
+
+    "Cada vez estoy más cerca...",
+
+    "Tengo algunas sospechas 👀",
+
+    "Esto se está poniendo interesante...",
+
+    "Estoy juntando las pistas...",
+
+    "Creo que ya sé por dónde viene...",
+
+    "Hay algo que me está haciendo sospechar...",
+
+    "No quiero equivocarme...",
+
+    "Estoy bastante seguro... pero voy a comprobarlo.",
+
+    "Creo que lo tengo...",
+
+    "Una última investigación...",
+
+    "Esto está muy cerca..."
+
+];
+
+
+/* ============================================================
+   MEZCLAR
+============================================================ */
+
+function mezclar(array) {
+
+    const copia = [...array];
+
+    for (
+        let i = copia.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [
+            copia[i],
+            copia[j]
+        ] = [
+            copia[j],
+            copia[i]
+        ];
+
+    }
+
+    return copia;
+
+}
+
+
+/* ============================================================
+   EMPEZAR
+============================================================ */
+
+function empezar() {
+
+    candidatos = personas.map(nombre => ({
+
+        nombre: nombre,
+
+        puntos: 0
+
+    }));
+
+
+    preguntasDisponibles =
+        mezclar(preguntasGenerales);
+
+
+    preguntaActual = null;
+
+    numeroPregunta = 0;
+
+    historial = [];
+
+    generoConfirmado = null;
+
+
+    document
+        .getElementById("inicio")
+        .classList.add("oculto");
+
+
+    document
+        .getElementById("resultado")
+        .classList.add("oculto");
+
+
+    document
+        .getElementById("juego")
+        .classList.remove("oculto");
+
+
+    siguientePregunta();
+
+}
+
+
+/* ============================================================
+   ACTUALIZAR GÉNERO
+============================================================ */
+
+function actualizarGenero(pregunta, respuesta) {
+
+    if (
+        pregunta.tipo !== "genero"
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        pregunta.texto === "¿Es hombre?"
+    ) {
+
+        if (
+            respuesta === true
+        ) {
+
+            generoConfirmado = "varon";
+
+        }
+
+        else if (
+            respuesta === false
+        ) {
+
+            generoConfirmado = "mujer";
+
+        }
+
+    }
+
+
+    if (
+        pregunta.texto === "¿Es mujer?"
+    ) {
+
+        if (
+            respuesta === true
+        ) {
+
+            generoConfirmado = "mujer";
+
+        }
+
+        else if (
+            respuesta === false
+        ) {
+
+            generoConfirmado = "varon";
+
+        }
+
+    }
+
+
+    if (
+        generoConfirmado === "mujer"
+    ) {
+
+        preguntasDisponibles =
+            preguntasDisponibles.filter(
+                p =>
+                    p.genero !== "varon"
+            );
+
+
+        const individualesMujer =
+            preguntasIndividuales.filter(
+                p =>
+                    p.genero === "mujer" &&
+                    !historial.includes(p.texto)
+            );
+
+
+        preguntasDisponibles.push(
+            ...individualesMujer
+        );
+
+    }
+
+
+    if (
+        generoConfirmado === "varon"
+    ) {
+
+        preguntasDisponibles =
+            preguntasDisponibles.filter(
+                p =>
+                    p.genero !== "mujer"
+            );
+
+
+        const individualesVaron =
+            preguntasIndividuales.filter(
+                p =>
+                    p.genero === "varon" &&
+                    !historial.includes(p.texto)
+            );
+
+
+        preguntasDisponibles.push(
+            ...individualesVaron
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   UTILIDAD DE PREGUNTA
+============================================================ */
+
+function utilidadPregunta(pregunta) {
+
+    const posibles =
+        candidatos.filter(
+            c =>
+                c.puntos > -50
+        );
+
+
+    if (
+        posibles.length <= 1
+    ) {
+
+        return -999;
+
+    }
+
+
+    let si = 0;
+
+    let no = 0;
+
+
+    posibles.forEach(candidato => {
+
+        if (
+            pregunta.si.includes(
+                candidato.nombre
+            )
+        ) {
+
+            si++;
+
+        }
+
+        else {
+
+            no++;
+
+        }
+
+    });
+
+
+    if (
+        si === 0 ||
+        no === 0
+    ) {
+
+        return -999;
+
+    }
+
+
+    return (
+        Math.min(si, no) /
+        posibles.length
+    );
+
+}
+
+
+/* ============================================================
+   ELEGIR PREGUNTA
+============================================================ */
+
+function elegirPregunta() {
+
+    let disponibles =
+        preguntasDisponibles.filter(
+            pregunta =>
+                !historial.includes(
+                    pregunta.texto
+                )
+        );
+
+
+    if (
+        generoConfirmado === "mujer"
+    ) {
+
+        disponibles =
+            disponibles.filter(
+                p =>
+                    p.genero !== "varon"
+            );
+
+    }
+
+
+    if (
+        generoConfirmado === "varon"
+    ) {
+
+        disponibles =
+            disponibles.filter(
+                p =>
+                    p.genero !== "mujer"
+            );
+
+    }
+
+
+    disponibles.sort(
+        (a, b) =>
+            utilidadPregunta(b) -
+            utilidadPregunta(a)
+    );
+
+
+    if (
+        disponibles.length === 0
+    ) {
+
+        return null;
+
+    }
+
+
+    const mejor =
+        utilidadPregunta(
+            disponibles[0]
+        );
+
+
+    const mejores =
+        disponibles.filter(
+            p =>
+                utilidadPregunta(p)
+                >= mejor - 0.12
+        );
+
+
+    const elegida =
+        mejores[
+            Math.floor(
+                Math.random() *
+                mejores.length
+            )
+        ];
+
+
+    preguntasDisponibles =
+        preguntasDisponibles.filter(
+            p =>
+                p.texto !==
+                elegida.texto
+        );
+
+
+    return elegida;
+
+}
+
+
+/* ============================================================
+   ACTUALIZAR CANDIDATOS
+============================================================ */
+
+function actualizarCandidatos(respuesta) {
+
+    const personasQueRespondenSi =
+        preguntaActual.si;
+
+
+    candidatos.forEach(candidato => {
+
+        const pertenece =
+            personasQueRespondenSi.includes(
+                candidato.nombre
+            );
+
+
+        if (
+            respuesta === true
+        ) {
+
+            if (
+                pertenece
+            ) {
+
+                candidato.puntos += 3;
+
+            }
+
+            else {
+
+                candidato.puntos -= 100;
+
+            }
+
+        }
+
+
+        if (
+            respuesta === false
+        ) {
+
+            if (
+                pertenece
+            ) {
+
+                candidato.puntos -= 100;
+
+            }
+
+            else {
+
+                candidato.puntos += 3;
+
+            }
+
+        }
+
+    });
+
+}
+
+
+/* ============================================================
+   OBTENER POSIBLES
+============================================================ */
+
+function obtenerPosibles() {
+
+    return candidatos
+        .filter(
+            candidato =>
+                candidato.puntos > -50
+        )
+        .sort(
+            (a, b) =>
+                b.puntos -
+                a.puntos
+        );
+
+}
+
+
+/* ============================================================
+   ¿PUEDE ADIVINAR?
+============================================================ */
+
+function puedeAdivinar() {
+
+    if (
+        numeroPregunta <
+        MINIMO_PREGUNTAS
+    ) {
+
+        return false;
+
+    }
+
+
+    const posibles =
+        obtenerPosibles();
+
+
+    if (
+        posibles.length === 1
+    ) {
+
+        return true;
+
+    }
+
+
+    if (
+        posibles.length >= 2
+    ) {
+
+        const diferencia =
+            posibles[0].puntos -
+            posibles[1].puntos;
+
+
+        if (
+            diferencia < 3
+        ) {
+
+            return false;
+
+        }
+
+
+        const utilidades =
+            preguntasDisponibles
+
+                .filter(
+                    p =>
+                        !historial.includes(
+                            p.texto
+                        )
+                )
+
+                .filter(
+                    p => {
+
+                        if (
+                            generoConfirmado ===
+                            "mujer"
+                        ) {
+
+                            return (
+                                p.genero !==
+                                "varon"
+                            );
+
+                        }
+
+
+                        if (
+                            generoConfirmado ===
+                            "varon"
+                        ) {
+
+                            return (
+                                p.genero !==
+                                "mujer"
+                            );
+
+                        }
+
+
+                        return true;
+
+                    }
+                )
+
+                .map(
+                    p =>
+                        utilidadPregunta(p)
+                );
+
+
+        const mejor =
+            Math.max(
+                ...utilidades,
+                0
+            );
+
+
+        if (
+            mejor >= 0.25
+        ) {
+
+            return false;
+
+        }
+
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+/* ============================================================
+   SIGUIENTE PREGUNTA
+============================================================ */
+
+function siguientePregunta() {
+
+    if (
+        numeroPregunta >=
+        MAXIMO_PREGUNTAS
+    ) {
+
+        mostrarResultado();
+
+        return;
+
+    }
+
+
+    if (
+        puedeAdivinar()
+    ) {
+
+        mostrarResultado();
+
+        return;
+
+    }
+
+
+    preguntaActual =
+        elegirPregunta();
+
+
+    if (
+        !preguntaActual
+    ) {
+
+        mostrarResultado();
+
+        return;
+
+    }
+
+
+    numeroPregunta++;
+
+
+    historial.push(
+        preguntaActual.texto
+    );
+
+
+    const elemento =
+        document.getElementById(
+            "pregunta"
+        );
+
+
+    elemento.classList.remove(
+        "aparecer"
+    );
+
+
+    void elemento.offsetWidth;
+
+
+    elemento.classList.add(
+        "aparecer"
+    );
+
+
+    elemento.textContent =
+        preguntaActual.texto;
+
+
+    const porcentaje =
+        Math.min(
+            (
+                numeroPregunta /
+                MAXIMO_PREGUNTAS
+            ) * 100,
+            95
+        );
+
+
+    document
+        .getElementById("progreso")
+        .style.width =
+        porcentaje + "%";
+
+
+    document
+        .getElementById("mensaje")
+        .textContent =
+        mensajes[
+            Math.min(
+                numeroPregunta - 1,
+                mensajes.length - 1
+            )
+        ];
+
+}
+
+
+/* ============================================================
+   RESPONDER
+============================================================ */
+
+function responder(respuesta) {
+
+    if (
+        respuesta === null
+    ) {
+
+        document
+            .getElementById("mensaje")
+            .textContent =
+            "Bueno... voy a buscar otra pista 👀";
+
+
+        setTimeout(
+            siguientePregunta,
+            400
+        );
+
+
+        return;
+
+    }
+
+
+    actualizarGenero(
+        preguntaActual,
+        respuesta
+    );
+
+
+    actualizarCandidatos(
+        respuesta
+    );
+
+
+    setTimeout(
+        siguientePregunta,
+        400
+    );
+
+}
+
+
+/* ============================================================
+   MOSTRAR RESULTADO
+============================================================ */
+
+function mostrarResultado() {
+
+    const posibles =
+        obtenerPosibles();
+
+
+    let ganador;
+
+
+    if (
+        posibles.length > 0
+    ) {
+
+        ganador =
+            posibles[0];
+
+    }
+
+    else {
+
+        ganador =
+            candidatos.sort(
+                (a, b) =>
+                    b.puntos -
+                    a.puntos
+            )[0];
+
+    }
+
+
+    if (!ganador) {
+
+        return;
+
+    }
+
+
+    document
+        .getElementById("juego")
+        .classList.add("oculto");
+
+
+    document
+        .getElementById("resultado")
+        .classList.remove("oculto");
+
+
+    document
+        .getElementById("progreso")
+        .style.width =
+        "100%";
+
+
+    document
+        .getElementById(
+            "nombreResultado"
+        )
+        .textContent =
+        ganador.nombre.toUpperCase();
+
+
+    const foto =
+        document.getElementById(
+            "fotoResultado"
+        );
+
+
+    if (
+        fotos[ganador.nombre]
+    ) {
+
+        foto.src =
+            fotos[ganador.nombre];
+
+        foto.alt =
+            ganador.nombre;
+
+        foto.style.display =
+            "block";
+
+    }
+
+    else {
+
+        foto.style.display =
+            "none";
+
+    }
+
+
+    document
+        .getElementById(
+            "textoResultado"
+        )
+        .textContent =
+        "¡TE DESCUBRÍ! 🟡";
+
+}
+
+
+/* ============================================================
+   REINICIAR
+============================================================ */
+
+function reiniciar() {
+
+    document
+        .getElementById("resultado")
+        .classList.add("oculto");
+
+
+    document
+        .getElementById("juego")
+        .classList.add("oculto");
+
+
+    document
+        .getElementById("inicio")
+        .classList.remove("oculto");
+
+
+    candidatos = [];
+
+    preguntasDisponibles = [];
+
+    preguntaActual = null;
+
+    numeroPregunta = 0;
+
+    historial = [];
+
+    generoConfirmado = null;
+
+}
+
+</script>
+
+</body>
+
+</html>
